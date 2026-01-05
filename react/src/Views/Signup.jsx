@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axiosClient from '../../axios';
 import { useStateContext } from '../context/ContextProvider';
+import { Navigate } from 'react-router-dom';
 
 export default function Signup() {
 
@@ -33,9 +34,11 @@ export default function Signup() {
       }
     }
 
-
   }
 
+  if(userToken){
+    return <Navigate to='/' />;
+  }
   
 
 

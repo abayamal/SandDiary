@@ -3,8 +3,19 @@ import Dashboard from "./Components/Dashboard";
 import GuestLayout from "./Components/GuestLayout";
 import Login from "./Views/Login";
 import Signup from "./Views/Signup";
+import DefaultLayout from "./Components/DefaultLayout";
 
 const router = createBrowserRouter([
+    {
+        path:"/",
+        element:<DefaultLayout/>,
+        children:[
+            {
+                path:"/",
+                element:<Dashboard/>
+            }
+        ]
+    },
     {
         path: "/",
         element:<GuestLayout/>,
@@ -20,6 +31,7 @@ const router = createBrowserRouter([
            
         ]
     },
+ 
    
 ])
 
