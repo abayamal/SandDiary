@@ -1,7 +1,12 @@
 import React from 'react'
+import PageComponent from './PageComponent'
 
 export default function Dashboard() {
   return (
-    <div>Dashboard</div>
+    <>
+     <PageComponent title="Dashboard">
+      
+     </PageComponent>
+    </>
   )
 }
