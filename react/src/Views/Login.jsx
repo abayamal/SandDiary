@@ -9,7 +9,7 @@ export default function Login() {
   const [password,setPassword] = useState('');
   const [errors,setErrors] = useState({});
 
-  const {userTokenSetter,userToken} = useStateContext();
+  const {userTokenSetter,userToken,setCurrentUser} = useStateContext();
 
   async function onSubmit(e){
     e.preventDefault();
@@ -18,8 +18,8 @@ export default function Login() {
           email,
           password
         })
-
         userTokenSetter(response.data.token);
+        setCurrentUser(response.data.user);
     
     }catch(err){
       if(err.response){
