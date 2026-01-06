@@ -3,6 +3,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useStateContext } from '../context/ContextProvider'
 import axiosClient from '../../axios'
+import { useEffect } from 'react'
 
 const user = {
   name: 'Tom Cook',
@@ -43,7 +44,17 @@ export default function DefaultLayout() {
     }
   }
 
-  
+  useEffect(()=>{ 
+    const fetchUser = async () => {
+      try{
+        const response = await axiosClient.get('/me');
+        setCurrentUser(response.data);
+      }catch(error){
+        console.error('Failed to fetch user',error);
+      }
+    };
+    fetchUser();
+   },[]);
   return (
     <>
       {/*
@@ -92,7 +103,6 @@ export default function DefaultLayout() {
                   >
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">View notifications</span>
-                    <BellIcon aria-hidden="true" className="size-6" />
                   </button>
 
                   {/* Profile dropdown */}
@@ -173,7 +183,6 @@ export default function DefaultLayout() {
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
-                  <BellIcon aria-hidden="true" className="size-6" />
                 </button>
               </div>
               <div className="mt-3 space-y-1 px-2">
