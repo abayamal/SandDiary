@@ -26,11 +26,12 @@ export default function Signup() {
       });
 
       userTokenSetter(response.data.token);
+      setCurrentUser(response.data.user);
+
 
     } catch (error) {
       if(error.response && error.response.status === 422){
         setErrors(error.response.data.errors); 
-        
       }
     }
 

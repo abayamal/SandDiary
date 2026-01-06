@@ -2,6 +2,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useStateContext } from '../context/ContextProvider'
+import axiosClient from '../../axios'
 
 const user = {
   name: 'Tom Cook',
@@ -23,11 +24,26 @@ function classNames(...classes) {
 
 export default function DefaultLayout() {
 
-  const {userToken} = useStateContext();
+  const {userToken,userTokenSetter,setCurrentUser,currentuser} = useStateContext();
   
   if(!userToken){
     return <Navigate to="/login"/>
   }
+
+  async function logout(){   
+    try{
+      const response = await axiosClient.post('/logout');
+      console.log(response)
+      localStorage.removeItem('token');
+      setCurrentUser({});
+      userTokenSetter(null);
+      
+    }catch(error){
+      console.error('Logout failed',error);
+    }
+  }
+
+  
   return (
     <>
       {/*
@@ -98,8 +114,8 @@ export default function DefaultLayout() {
                       {userNavigation.map((item) => (
                         <MenuItem key={item.name}>
                           <a
-                            href={item.href}
                             className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                            onClick={logout}
                           >
                             {item.name}
                           </a>
@@ -148,8 +164,8 @@ export default function DefaultLayout() {
                   />
                 </div>
                 <div className="ml-3">
-                  <div className="text-base/5 font-medium text-white">{user.name}</div>
-                  <div className="text-sm font-medium text-gray-400">{user.email}</div>
+                  <div className="text-base/5 font-medium text-white">{currentuser.name}</div>
+                  <div className="text-sm font-medium text-gray-400">{currentuser.email}</div>
                 </div>
                 <button
                   type="button"
@@ -166,6 +182,7 @@ export default function DefaultLayout() {
                     key={item.name}
                     as="a"
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white"
+                    onClick={logout}
                   >
                     {item.name}
                   </DisclosureButton>
