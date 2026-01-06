@@ -19,8 +19,7 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(response=>response,error=>{
   if(error.response && error.response.status === 401){
     localStorage.removeItem('token');
-    window.location.reload(); 
-    // window.location.href = '/login';
+    // window.location.reload(); 
   }
   return Promise.reject(error);
 })
