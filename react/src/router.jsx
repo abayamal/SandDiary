@@ -1,9 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import Dashboard from "./Components/Dashboard";
+
 import GuestLayout from "./Components/GuestLayout";
 import Login from "./Views/Login";
 import Signup from "./Views/Signup";
 import DefaultLayout from "./Components/DefaultLayout";
+import Dashboard from "./Views/Dashboard";
+import Workers from "./Views/Workers";
+import WorkerAdd from "./Views/WorkerAdd";
 
 const router = createBrowserRouter([
     {
@@ -13,7 +16,16 @@ const router = createBrowserRouter([
             {
                 path:"/",
                 element:<Dashboard/>
-            }
+            },
+            {
+                path:"/workers",
+                element:<Workers/>
+            },
+            {
+                path:"/worker/add",
+                element:<WorkerAdd/>
+            },
+          
         ]
     },
     {

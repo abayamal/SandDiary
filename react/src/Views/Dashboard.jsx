@@ -1,5 +1,5 @@
 import React from 'react'
-import PageComponent from './PageComponent'
+import PageComponent from '../Components/PageComponent'
 
 export default function Dashboard() {
   return (

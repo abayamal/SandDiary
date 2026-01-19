@@ -6,11 +6,22 @@ export const stateContext = createContext({
     userToken: null,
     setCurrentUser: () => {},
     setUserToken: () => {},
+    toast:{}
+
 })
 
 export const ContextProvider = ({ children }) => { 
     const [currentuser, setCurrentUser] = useState({});
     const [userToken, setUserToken] = useState(localStorage.getItem('token'));
+    const [toast,setToast] = useState({message:"",show:false});
+
+
+    function showToast(message){
+        setToast({message,show:true});
+        setTimeout(()=>{
+            setToast({message:"",show:false});  
+        },3000)
+    }
 
     //set token in local storage
     function userTokenSetter(token){
@@ -23,7 +34,7 @@ export const ContextProvider = ({ children }) => {
     }
 
     return (
-        <stateContext.Provider value={{ currentuser, setCurrentUser, userToken, userTokenSetter }}>
+        <stateContext.Provider value={{ currentuser, setCurrentUser, userToken, userTokenSetter, showToast, toast }}>
             {children}
         </stateContext.Provider>
     )
