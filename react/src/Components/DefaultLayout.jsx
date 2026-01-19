@@ -1,9 +1,10 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import { useStateContext } from '../context/ContextProvider'
 import axiosClient from '../../axios'
 import { useEffect } from 'react'
+import Toast from './Toast'
 
 const user = {
   name: 'Tom Cook',
@@ -12,7 +13,8 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Dashboard', href: '/', current: true },
+  { name: 'Workers', href: '/workers', current: true },
 ]
 const userNavigation = [
 
@@ -80,17 +82,16 @@ export default function DefaultLayout() {
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <NavLink
                         key={item.name}
-                        href={item.href}
-                        aria-current={item.current ? 'page' : undefined}
-                        className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                        to={item.href}
+                        className={({isActive}) => classNames(
+                          isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium',
                         )}
                       >
                         {item.name}
-                      </a>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
@@ -150,18 +151,17 @@ export default function DefaultLayout() {
           <DisclosurePanel className="md:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
               {navigation.map((item) => (
-                <DisclosureButton
+                <NavLink
                   key={item.name}
                   as="a"
-                  href={item.href}
-                  aria-current={item.current ? 'page' : undefined}
-                  className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                  to={item.href}
+                  className={({isActive}) => classNames(
+                    isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium',
                   )}
                 >
                   {item.name}
-                </DisclosureButton>
+                </NavLink>
               ))}
             </div>
             <div className="border-t border-white/10 pt-4 pb-3">
@@ -202,6 +202,8 @@ export default function DefaultLayout() {
         </Disclosure>
 
         <Outlet />
+
+        <Toast/>
       </div>
     </>
   )
