@@ -15,10 +15,12 @@ class WorkerResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id'=>$this->id,
             'name'=>$this->name,
             'phone'=>$this->phone,
+            'nic'=>$this->nic,
             'rateForCube'=>$this->rateForCube,
-            'rateForTractorLoad'=>$this->name,
+            'rateForTractorLoad'=>$this->rateForTractorLoad,
         ];
     }
 }
