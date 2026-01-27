@@ -7,6 +7,7 @@ import DefaultLayout from "./Components/DefaultLayout";
 import Dashboard from "./Views/Dashboard";
 import Workers from "./Views/Workers";
 import WorkerAdd from "./Views/WorkerAdd";
+import WorkerList from "./Views/WorkerList";
 
 const router = createBrowserRouter([
     {
@@ -22,9 +23,13 @@ const router = createBrowserRouter([
                 element:<Workers/>
             },
             {
-                path:"/worker/add",
+                path:"/workers/add",
                 element:<WorkerAdd/>
             },
+            {
+                path:"/workers/list",
+                element:<WorkerList/>
+            }
           
         ]
     },

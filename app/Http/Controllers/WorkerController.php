@@ -14,7 +14,7 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        //
+        return WorkerResource::collection(Worker::orderBy('created_at','desc')->paginate(5));
     }
 
     /**
