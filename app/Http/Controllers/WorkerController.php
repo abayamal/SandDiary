@@ -68,6 +68,10 @@ class WorkerController extends Controller
      */
     public function destroy(Worker $worker)
     {
-        //
+        $worker->delete();
+
+        return response()->json([
+            'message' => 'Worker deleted successfully'
+        ], 200);
     }
 }

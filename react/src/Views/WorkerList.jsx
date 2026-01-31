@@ -5,6 +5,8 @@ import { EyeDropperIcon, EyeIcon, PencilSquareIcon, TrashIcon } from '@heroicons
 import ClipLoader from "react-spinners/ClipLoader";
 import PaginationLinks from '../Components/PaginationLinks';
 import { Link } from 'react-router-dom';
+import ConfirmModel from '../Components/ConfirmModel';
+import { useStateContext } from '../context/ContextProvider';
 
 
 export default function WorkerList() {
@@ -12,6 +14,10 @@ export default function WorkerList() {
   const [workers,setWorkers] = useState([]);
   const [loading,setLoading] = useState(false);
   const [meta,setMeta] = useState({});
+  const [open, setOpen] = useState(false);
+  const [selectedId,setSelectedId] = useState(null);
+  const {showToast} = useStateContext();
+  
 
     const fetchData = async (url = '/worker')=>{
         setLoading(true);
@@ -26,18 +32,38 @@ export default function WorkerList() {
         }
     }
 
+    const deleteRecord = async ()=>{
+      if(!selectedId) return;
+      try{
+        await axiosClient.delete(`/worker/${selectedId}`);
+        setOpen(false);
+        setSelectedId(null);
+        showToast("Worker deleted successfully!");
+        fetchData();
+      }catch(error){
+        console.error(error);
+      }
+    }
+
+    const confirmDelete = (id)=>{
+      setSelectedId(id);
+      setOpen(true);
+    }
+
+
     useEffect(()=>{
       fetchData();
     },[]) 
 
-  const changeUrl = (url) => {
-    if (!url) return; 
-    fetchData(url);
-  };  
+    const changeUrl = (url) => {
+      if (!url) return; 
+      fetchData(url);
+    };  
+
+
 
   return (
     <PageComponent title="Workers List">
-      {}
       { loading ? 
       <div className='flex justify-center items-center h-64'>
         <ClipLoader size={40} /> 
@@ -68,8 +94,10 @@ export default function WorkerList() {
                         <Link to={`/workers/edit/${worker.id}`}>
                           <PencilSquareIcon className='w-6 cursor-pointer' title='Edit'/>
                         </Link>
-                        <EyeIcon className='w-6 cursor-pointer' title='View'/>
-                        <TrashIcon className='w-6 cursor-pointer' title='Delete'/>
+                        <Link to={`/workers/view/${worker.id}`}>
+                          <EyeIcon className='w-6 cursor-pointer' title='View'/>
+                        </Link>
+                        <TrashIcon className='w-6 cursor-pointer' title='Delete' onClick={()=>confirmDelete(worker.id)}/>
                       </div>
                     </td>
                   </tr>
@@ -81,7 +109,7 @@ export default function WorkerList() {
         </table>}
         {workers.length > 0 ? <PaginationLinks meta={meta} changeUrl={changeUrl}/> : null}
         
-      
+      <ConfirmModel open={open} setOpen={setOpen} title={'Confirm Delete'} description={'Are you sure want to delete this record?'} label={'Delete'} action={deleteRecord}/>
     </PageComponent>
   )
 }
