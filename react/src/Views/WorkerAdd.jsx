@@ -49,7 +49,7 @@ export default function WorkerAdd() {
   return (
     <PageComponent title="Add Worker">
       <div className='max-w-xl mx-auto'>
-        <WorkerForm values={values} setValues={setValues} errors={errors}  onsubmit={onsubmit} submitLabel="create"/>
+        <WorkerForm values={values} setValues={setValues} errors={errors}  onsubmit={onsubmit} submitLabel="create" cancelPath={"/workers"}/>
       </div>
     </PageComponent>
   )

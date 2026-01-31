@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
-export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel}) {
+export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel,cancelPath}) {
+  const navigate = useNavigate();
   return (
     <div>
         <form className='mx-auto px-5' onSubmit={onsubmit}>
@@ -17,6 +19,7 @@ export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel
                         id="name"
                         name="name"
                         type="text"
+                        value={values.name || ''}
                         onChange={(ev)=>setValues({...values,name:ev.target.value})}
                         placeholder="janesmith"
                         className="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
@@ -35,6 +38,7 @@ export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel
                         id="nic"
                         name="nic"
                         type="text"
+                        value={values.nic || ''}
                         onChange={(ev)=>setValues({...values,nic:ev.target.value})}
                         placeholder="951710407V"
                         className="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
@@ -53,6 +57,7 @@ export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel
                         id="phone"
                         name="phone"
                         type="text"
+                        value={values.phone || ''}
                         onChange={(ev)=>setValues({...values,phone:ev.target.value})}
                         placeholder="071370242"
                         className="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
@@ -72,6 +77,7 @@ export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel
                         id="rateForCube"
                         name="rateForCube"
                         type="text"
+                        value={values.rateForCube || ''}
                         onChange={(ev)=>setValues({...values,rateForCube:ev.target.value})}
                         placeholder="5000"
                         className="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
@@ -90,6 +96,7 @@ export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel
                         id="rateForTractorLoad"
                         name="rateForTractorLoad"
                         type="text"
+                        value={values.rateForTractorLoad || ''}
                         onChange={(ev)=>setValues({...values,rateForTractorLoad:ev.target.value})}
                         placeholder="4000"
                         className="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
@@ -104,7 +111,7 @@ export default function WorkerForm({values,setValues,errors,onsubmit,submitLabel
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
             {/* <Link to="/workers"> */}
-              <button type="button" className="text-sm/6 font-semibold text-gray-900 mr-2" onClick={()=>navigate("/workers")}>
+              <button type="button" className="text-sm/6 font-semibold text-gray-900 mr-2" onClick={()=>navigate(cancelPath)}>
                 Cancel
               </button>
               <button
