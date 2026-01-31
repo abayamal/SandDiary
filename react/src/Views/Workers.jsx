@@ -12,7 +12,7 @@ export default function Workers() {
                 <ButtonCard name="Add Worker" to="/workers/add">
                     <UserPlusIcon className="h-8 w-8 text-[#4a91f1] group-hover:text-white" />
                 </ButtonCard>     
-                <ButtonCard name="Add Worker" to="/workers/list">
+                <ButtonCard name="Manage Workers" to="/workers/list">
                     <PencilSquareIcon className="h-8 w-8 text-[#4a91f1] group-hover:text-white" />
                 </ButtonCard>     
             </div>

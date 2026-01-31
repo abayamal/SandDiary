@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateWorkerRequest extends FormRequest
@@ -11,7 +12,7 @@ class UpdateWorkerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,15 @@ class UpdateWorkerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'=>'required|string|regex:/^[a-zA-Z\s]+$/',
+            'nic'=>[
+                    'required',
+                    'regex:/^[0-9]{9}[vVxX]$/',
+                     Rule::unique('workers', 'nic')->ignore($this->worker),
+                    ],
+            'phone'=>'required|numeric|digits:10',
+            'rateForCube'=>'required|numeric',
+            'rateForTractorLoad'=>'required|numeric',
         ];
     }
 }

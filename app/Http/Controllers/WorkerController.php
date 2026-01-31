@@ -42,7 +42,7 @@ class WorkerController extends Controller
      */
     public function show(Worker $worker)
     {
-        //
+        return new WorkerResource($worker);
     }
 
     /**
@@ -50,7 +50,7 @@ class WorkerController extends Controller
      */
     public function edit(Worker $worker)
     {
-        //
+        
     }
 
     /**
@@ -58,7 +58,9 @@ class WorkerController extends Controller
      */
     public function update(UpdateWorkerRequest $request, Worker $worker)
     {
-        //
+        $data = $request->validated();
+        $worker->update($data);
+        return new WorkerResource($worker);
     }
 
     /**

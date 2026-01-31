@@ -4,6 +4,7 @@ import axiosClient from '../../axios'
 import { EyeDropperIcon, EyeIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import ClipLoader from "react-spinners/ClipLoader";
 import PaginationLinks from '../Components/PaginationLinks';
+import { Link } from 'react-router-dom';
 
 
 export default function WorkerList() {
@@ -64,7 +65,9 @@ export default function WorkerList() {
                     <td className="px-4 py-2">LKR.{worker.rateForTractorLoad}</td>
                     <td className="px-4 py-2">
                       <div className='flex gap-2 justify-center'>
-                        <PencilSquareIcon className='w-6 cursor-pointer' title='Edit'/>
+                        <Link to={`/workers/edit/${worker.id}`}>
+                          <PencilSquareIcon className='w-6 cursor-pointer' title='Edit'/>
+                        </Link>
                         <EyeIcon className='w-6 cursor-pointer' title='View'/>
                         <TrashIcon className='w-6 cursor-pointer' title='Delete'/>
                       </div>
