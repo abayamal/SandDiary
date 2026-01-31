@@ -9,6 +9,7 @@ import Workers from "./Views/Workers";
 import WorkerAdd from "./Views/WorkerAdd";
 import WorkerList from "./Views/WorkerList";
 import WorkerEdit from "./Views/WorkerEdit";
+import WorkerRead from "./Views/WorkerRead";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             {
                 path:"/workers/edit/:id",
                 element:<WorkerEdit/>
+            },
+            {
+                path:"/workers/view/:id",
+                element:<WorkerRead/>
             },
             {
                 path:"/workers/list",
