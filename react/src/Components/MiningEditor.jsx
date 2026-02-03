@@ -5,26 +5,33 @@ import axiosClient from '../../axios';
 export default function MiningEditor({miningRecord,deleteMiningRecord,changeMiningRecord}) {
 
     const [model,setModel] = useState({...miningRecord});
+    const [loading,setLoading] = useState(false);
 
     const [nameOptions,setNameOptions] = useState([]);
     const volumes = [0.75,1];
 
     const fetchWorkers = async ()=>{
+        setLoading(true);
         try{
            const response = await axiosClient.get('/workers/options')
             setNameOptions(response.data);
+            setLoading(false);
         }catch(error){
-            console.log(error);
+            console.error('Failed to load workers', error);
+        }finally{
+            setLoading(false)
         }
     }
+
+    const commitChange = () => changeMiningRecord(model);
 
     useEffect(()=>{
         fetchWorkers();
     },[])
 
-    useEffect(()=>{
-        changeMiningRecord(model);
-    },[model])
+    useEffect(() => {
+        setModel({ ...miningRecord });
+    }, [miningRecord]);
 
 
   return (
@@ -38,8 +45,9 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     <select
                     value={model.workerId}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
-                    onChange={(ev)=>setModel({...model,workerId:ev.target.value})}>
-                        <option value="">Select worker</option>
+                    onChange={(ev)=>setModel({...model,workerId:ev.target.value})}
+                    onBlur={commitChange}>
+                        <option value="">{loading ? 'Loading Workers...' : 'Select Worker'}</option>
                         {nameOptions.map((o)=>(
                             <option key={o.id} value={o.id}>
                                 {o.name}
@@ -55,7 +63,8 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     value={model.volume}
                     placeholder="Enter capacity"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
-                    onChange={(ev)=>setModel({...model,volume:ev.target.value})}
+                    onChange={(ev)=>setModel({...model,volume:Number(ev.target.value)})}
+                    onBlur={commitChange}
                     >
                        <option value="">Select Volume</option>
                        {volumes.map((v)=>(
@@ -68,9 +77,11 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     Number of Loads
                     </label>
                     <input
-                    type="text"
+                    type="number"
+                    min="0"
                     value={model.numberOfLoads}
-                    onChange={(ev)=>setModel({...model,numberOfLoads:ev.target.value})}
+                    onChange={(ev)=>setModel({...model,numberOfLoads:Number(ev.target.value)})}
+                    onBlur={commitChange}
                     placeholder="Enter quantity"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
                     />
