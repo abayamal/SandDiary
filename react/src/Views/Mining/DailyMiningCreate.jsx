@@ -37,8 +37,19 @@ export default function DailyMiningCreate() {
         );
     };
 
-    const deleteMiningRecord = (id) => {
+    const deleteMiningRecord = (id,index) => {
         setMiningRecords(prev => prev.filter(m => m.id !== id));
+
+        //  Remove validation errors related to the deleted record as well
+         setErrors(prev => {
+            const newErrors = {};
+            Object.keys(prev).forEach(key => {
+                if (!key.startsWith(`records.${index}.`)) {
+                    newErrors[key] = prev[key];
+                }
+            });
+            return newErrors;
+        });
     }
 
     const handleSubmit = async (e)=>{
@@ -56,6 +67,15 @@ export default function DailyMiningCreate() {
         }
     }
 
+    const clearFieldError = (index,field)=>{
+        setErrors(prev=>{
+            const newErrors = {...prev};
+            delete newErrors[`records.${index}.${field}`];
+            return newErrors;
+        })
+    }
+
+    console.log(errors);
 
     return (
         <PageComponent title="Daily Mining Entry">
@@ -71,9 +91,18 @@ export default function DailyMiningCreate() {
                             </label>
                             <input
                                 type="date"
-                                onChange={(ev)=>setDate(ev.target.value)}
+                                onChange={(ev)=>{
+                                    setDate(ev.target.value)
+                                    setErrors(prev=>{
+                                        const newErrors = {...prev};
+                                        delete newErrors[`date`];
+                                        return newErrors;
+                                    })
+                                
+                                }}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
                             />
+                        
                         </div>
 
                         <div className='w-[70px]'>
@@ -85,6 +114,13 @@ export default function DailyMiningCreate() {
                             </button>
                         </div>
                     </div>
+                        {
+                            errors.date?.[0] && (
+                                <p className="text-sm text-red-600 mt-1 block">
+                                    {errors.date[0]}
+                                </p>
+                            )
+                        }
                     {miningRecords.length === 0 && (
                         <div className='text-center' style={{ color: '#868d98' }}>
                             No records found. Please click the "ADD" button to add a record.
@@ -109,6 +145,7 @@ export default function DailyMiningCreate() {
                                     changeMiningRecord={changeMiningRecord}
                                     errors={errors}
                                     index={index}
+                                    clearFieldError={clearFieldError}
 
                                 />
                             </motion.div>

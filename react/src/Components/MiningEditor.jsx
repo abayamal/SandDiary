@@ -2,7 +2,7 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 import React, { useEffect, useState } from 'react'
 import axiosClient from '../../axios';
 
-export default function MiningEditor({miningRecord,deleteMiningRecord,changeMiningRecord,errors,index}) {
+export default function MiningEditor({miningRecord,deleteMiningRecord,changeMiningRecord,errors,index,clearFieldError}) {
 
     const [model,setModel] = useState({...miningRecord});
     const [loading,setLoading] = useState(false);
@@ -33,12 +33,8 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
         setModel({ ...miningRecord });
     }, [miningRecord]);
 
-    console.log(errors);
-
     const fieldError = (field) =>
-  errors?.[`records.${index}.${field}`]?.[0];
-
-
+    errors?.[`records.${index}.${field}`]?.[0];
 
   return (
     <>
@@ -51,7 +47,12 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     <select
                     value={model.workerId}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
-                    onChange={(ev)=>setModel({...model,workerId:ev.target.value})}
+                    onChange={(ev)=>{
+                        setModel({...model,workerId:ev.target.value})
+                        clearFieldError(index,'workerId');
+                    }
+                
+                    }
                     onBlur={commitChange}>
                         <option value="">{loading ? 'Loading Workers...' : 'Select Worker'}</option>
                         {nameOptions.map((o)=>(
@@ -74,7 +75,10 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     value={model.volume}
                     placeholder="Enter capacity"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
-                    onChange={(ev)=>setModel({...model,volume:Number(ev.target.value)})}
+                    onChange={(ev)=>{
+                        setModel({...model,volume:Number(ev.target.value)})
+                        clearFieldError(index,'volume');
+                    }}
                     onBlur={commitChange}
                     >
                        <option value="">Select Volume</option>
@@ -93,13 +97,15 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     Number of Loads
                     </label>
                     <input
-                    type="number"
-                    min="0"
+                    type="text"
                     value={model.numberOfLoads}
-                    onChange={(ev)=>setModel({...model,numberOfLoads:Number(ev.target.value)})}
+                    onChange={(ev)=>{
+                        setModel({...model,numberOfLoads:ev.target.value})
+                        clearFieldError(index,'numberOfLoads');
+                    }}
                     onBlur={commitChange}
                     placeholder="Enter quantity"
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
+                    className={`w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none`}
                     />
                      {fieldError('numberOfLoads') && (
                     <p className="text-sm text-red-600 mt-1">
@@ -109,7 +115,7 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                 </div>
             </div>
             <div className='flex items-end pb-2 flex-shrink-0'>
-                <TrashIcon className='w-6 h-6 text-red-600 cursor-pointer' onClick={()=>deleteMiningRecord(model.id)}/>
+                <TrashIcon className='w-6 h-6 text-red-600 cursor-pointer' onClick={()=>deleteMiningRecord(model.id,index)}/>
             </div>
         </div>
     </>
