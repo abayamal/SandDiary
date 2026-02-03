@@ -3,9 +3,12 @@ import PageComponent from '../../Components/PageComponent'
 import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
 import MiningEditor from '../../Components/MiningEditor'
+import axiosClient from '../../../axios';
 
 export default function DailyMiningCreate() {
 
+    const [date,setDate] = useState('');
+    const [errors,setErrors] = useState({});
     const [miningRecords,setMiningRecords] = useState([
         {
             id: uuidv4(),
@@ -38,13 +41,27 @@ export default function DailyMiningCreate() {
         setMiningRecords(prev => prev.filter(m => m.id !== id));
     }
 
-    console.log(miningRecords);
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+
+        try{
+            const response = await axiosClient.post('/mining-records',{
+                date,
+                records:miningRecords
+            });
+        }catch(error){
+            if(error.response?.status === 422){
+                setErrors(error.response.data.errors)
+            }
+        }
+    }
+
 
     return (
         <PageComponent title="Daily Mining Entry">
             <div className="max-w-3xl mx-auto mt-10 rounded-xl bg-white shadow-md p-6 sm:p-8">
                 {/* Wrap the entire form with motion.div and layout for smooth layout animation */}
-                <motion.form layout className="space-y-4">
+                <motion.form layout className="space-y-4" onSubmit={handleSubmit}>
                     
                     {/* Calendar / Date Field */}
                     <div className="flex gap-2 items-end">
@@ -54,6 +71,7 @@ export default function DailyMiningCreate() {
                             </label>
                             <input
                                 type="date"
+                                onChange={(ev)=>setDate(ev.target.value)}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
                             />
                         </div>
@@ -76,7 +94,7 @@ export default function DailyMiningCreate() {
 
                     {/* Mining Records List */}
                     <AnimatePresence>
-                        {miningRecords.map((m) => (
+                        {miningRecords.map((m,index) => (
                             <motion.div
                                 key={m.id}
                                 layout            // smooth layout transition
@@ -89,6 +107,8 @@ export default function DailyMiningCreate() {
                                     miningRecord={m}
                                     deleteMiningRecord={deleteMiningRecord}
                                     changeMiningRecord={changeMiningRecord}
+                                    errors={errors}
+                                    index={index}
 
                                 />
                             </motion.div>
