@@ -10,6 +10,8 @@ import WorkerAdd from "./Views/WorkerAdd";
 import WorkerList from "./Views/WorkerList";
 import WorkerEdit from "./Views/WorkerEdit";
 import WorkerRead from "./Views/WorkerRead";
+import Mining from "./Views/Mining/Mining";
+import DailyMiningCreate from "./Views/Mining/DailyMiningCreate";
 
 const router = createBrowserRouter([
     {
@@ -39,6 +41,18 @@ const router = createBrowserRouter([
             {
                 path:"/workers/list",
                 element:<WorkerList/>
+            },
+            {
+                path:"/mining",
+                element:<Mining/>
+            },
+            {
+                path:"/mining",
+                element:<Mining/>
+            },
+            {
+                path:"/mining/daily/create",
+                element:<DailyMiningCreate/>
             }
           
         ]
