@@ -2,7 +2,7 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 import React, { useEffect, useState } from 'react'
 import axiosClient from '../../axios';
 
-export default function MiningEditor({miningRecord,deleteMiningRecord,changeMiningRecord}) {
+export default function MiningEditor({miningRecord,deleteMiningRecord,changeMiningRecord,errors,index}) {
 
     const [model,setModel] = useState({...miningRecord});
     const [loading,setLoading] = useState(false);
@@ -33,6 +33,12 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
         setModel({ ...miningRecord });
     }, [miningRecord]);
 
+    console.log(errors);
+
+    const fieldError = (field) =>
+  errors?.[`records.${index}.${field}`]?.[0];
+
+
 
   return (
     <>
@@ -54,6 +60,11 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                             </option>
                         ))}
                     </select>
+                {fieldError('workerId') && (
+                <p className="text-sm text-red-600 mt-1">
+                    {fieldError('workerId')}
+                </p>
+                )}
                 </div>
                 <div className='flex-1 min-w-[200px]'>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -71,6 +82,11 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                         <option key={v} value={v}>{v}</option>
                        ))} 
                     </select>
+                    {fieldError('volume') && (
+                    <p className="text-sm text-red-600 mt-1">
+                        {fieldError('volume')}
+                    </p>
+                    )}
                 </div>
                 <div className='flex-1 min-w-[200px]'>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -85,6 +101,11 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     placeholder="Enter quantity"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
                     />
+                     {fieldError('numberOfLoads') && (
+                    <p className="text-sm text-red-600 mt-1">
+                        {fieldError('numberOfLoads')}
+                    </p>
+                    )}
                 </div>
             </div>
             <div className='flex items-end pb-2 flex-shrink-0'>
