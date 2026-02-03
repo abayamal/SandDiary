@@ -74,4 +74,11 @@ class WorkerController extends Controller
             'message' => 'Worker deleted successfully'
         ], 200);
     }
+
+    /**
+     * fetch all workers for dropdown.
+     */
+    public function options(){
+        return Worker::select('id','name')->orderBy('name')->get();
+    }
 }

@@ -14,6 +14,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('/logout',[AuthController::class,'logout']);
     Route::get('/me',[AuthController::class,'me']);
     Route::apiResource('/worker',WorkerController::class);
+    Route::get('/workers/options',[WorkerController::class,'options']);
 });
 
 Route::post('/signup',[AuthController::class,'signup']); 
