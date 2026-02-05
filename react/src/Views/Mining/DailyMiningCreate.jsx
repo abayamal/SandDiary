@@ -4,11 +4,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
 import MiningEditor from '../../Components/MiningEditor'
 import axiosClient from '../../../axios';
+import { useStateContext } from '../../context/ContextProvider';
 
 export default function DailyMiningCreate() {
 
     const [date,setDate] = useState('');
     const [errors,setErrors] = useState({});
+    const {showToast} = useStateContext();
     const [miningRecords,setMiningRecords] = useState([
         {
             id: uuidv4(),
@@ -17,6 +19,7 @@ export default function DailyMiningCreate() {
             numberOfLoads: ''
         }
     ]);
+
 
     const addMiningRecord = (ev) => {
         ev.preventDefault();
@@ -60,6 +63,15 @@ export default function DailyMiningCreate() {
                 date,
                 records:miningRecords
             });
+            showToast(response.data.message);
+            setDate('');
+            setMiningRecords([{
+                id: uuidv4(),
+                workerId: '',
+                volume: '',
+                numberOfLoads: ''
+            }]);
+            setErrors({});
         }catch(error){
             if(error.response?.status === 422){
                 setErrors(error.response.data.errors)
@@ -75,7 +87,6 @@ export default function DailyMiningCreate() {
         })
     }
 
-    console.log(errors);
 
     return (
         <PageComponent title="Daily Mining Entry">
@@ -91,6 +102,7 @@ export default function DailyMiningCreate() {
                             </label>
                             <input
                                 type="date"
+                                value={date}
                                 onChange={(ev)=>{
                                     setDate(ev.target.value)
                                     setErrors(prev=>{
@@ -98,7 +110,6 @@ export default function DailyMiningCreate() {
                                         delete newErrors[`date`];
                                         return newErrors;
                                     })
-                                
                                 }}
                                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
                             />

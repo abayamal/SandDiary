@@ -36,7 +36,7 @@ class StoreMiningRecordRequest extends FormRequest
             'records.*.workerId.required'=>'Please select a worker',
             'records.*.volume.required'=>'Please select a volume',
             'records.*.numberOfLoads.required'=>'Please select Number of Loads',
-            'records.*.numberOfLoads.numeric'=>'Number of loads must be an integer.',
+            'records.*.numberOfLoads.numeric'=>'Number of loads must be an numeric.',
             'records.*.numberOfLoads.min'=>'Number of loads field must be at least 1',
         ];
     }
