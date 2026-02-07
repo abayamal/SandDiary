@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\MiningRecordItem;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreMiningRecordRequest;
+use App\Models\SandMovement;
 
 class MiningRecordController extends Controller
 {
@@ -44,6 +45,20 @@ class MiningRecordController extends Controller
                 ])->toArray();
 
                 MiningRecordItem::insert($items);
+
+                // create sand movement (IN) - ledger entries
+
+                $movements = collect($items)->map(fn ($item)=>[
+                    'type'=>SandMovement::TYPE_IN,
+                    'loads'=>$item['number_of_loads'],
+                    'volume'=>$item['volume'],
+                    'reference_type'=>MiningRecord::class,
+                    'reference_id'=>$miningRecord->id,
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
+                ])->toArray();
+
+                SandMovement::insert($movements);
 
                 return $miningRecord;
 
