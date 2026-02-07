@@ -13,4 +13,8 @@ class MiningRecord extends Model
     public function items(){
         return $this->hasMany(MiningRecordItem::class);
     }
+
+    public function sandMovements(){
+        return $this->morphMany(SandMovement::class,'reference');
+    }
 }
