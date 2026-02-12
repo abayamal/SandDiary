@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\MiningRecordItem;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreMiningRecordRequest;
+use App\Http\Resources\DailyMiningResource;
 use App\Models\SandMovement;
 
 class MiningRecordController extends Controller
@@ -16,7 +17,13 @@ class MiningRecordController extends Controller
      */
     public function index()
     {
-        //
+        $dailyRecords = MiningRecord::with(['items'])
+                        ->withCount('items')
+                        ->orderByDesc('date')
+                        ->paginate(5);
+
+        return DailyMiningResource::collection($dailyRecords);
+        
     }
 
     /**
