@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MiningEditor from '../../Components/MiningEditor'
 import axiosClient from '../../../axios';
 import { useStateContext } from '../../context/ContextProvider';
+import BackButton from '../../Components/BackButton';
 
 export default function DailyMiningCreate() {
 
@@ -89,7 +90,9 @@ export default function DailyMiningCreate() {
 
 
     return (
-        <PageComponent title="Daily Mining Entry">
+        <PageComponent title="Daily Mining Entry" actions={
+                <BackButton fallback="/mining/daily" />
+              }>
             <div className="max-w-3xl mx-auto mt-10 rounded-xl bg-white shadow-md p-6 sm:p-8">
                 {/* Wrap the entire form with motion.div and layout for smooth layout animation */}
                 <motion.form layout className="space-y-4" onSubmit={handleSubmit}>
