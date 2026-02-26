@@ -17,4 +17,8 @@ class MiningRecordItem extends Model
     public function worker(){
         return $this->belongsTo(Worker::class);
     }
+
+    protected $casts = [
+        'volume' => 'float',
+    ];
 }

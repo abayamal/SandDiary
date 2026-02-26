@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MiningRecord;
-use Illuminate\Http\Request;
-use App\Models\MiningRecordItem;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreMiningRecordRequest;
+
+use App\Http\Requests\UpdateMiningRecordRequest;
 use App\Http\Resources\DailyMiningResource;
+use App\Http\Resources\MiningRecordResource;
+use App\Models\MiningRecord;
+use App\Models\MiningRecordItem;
 use App\Models\SandMovement;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+use function PHPSTORM_META\map;
+use function Symfony\Component\Clock\now;
 
 class MiningRecordController extends Controller
 {
@@ -85,15 +91,89 @@ class MiningRecordController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $miningRecord = MiningRecord::with(['items'])->find($id);
+
+        return new MiningRecordResource($miningRecord);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateMiningRecordRequest $request, string $id)
     {
-        //
+        $validatedData = $request->validated();
+
+        try{
+
+            DB::transaction(function () use ($validatedData,$id){
+                $miningRecord = MiningRecord::with('items')->findOrFail($id);
+
+                $miningRecord->update([
+                    'date'=>$validatedData['date']
+                ]);
+
+                $existingItems = $miningRecord->items->keyBy('id');
+
+                $existingIds = [];
+
+                foreach($validatedData['records'] as $record)   {
+
+                    //Already exist records
+                    if(isset($record['id']) && is_numeric($record['id'])){
+                        $item = $existingItems[$record['id']];
+
+                        $item->update([
+                            'worker_id'=>$record['workerId'],
+                            'volume'=>$record['volume'],
+                            'number_of_loads'=>$record['numberOfLoads'],
+                            'updated_at'=>now(),
+                        ]);
+
+                    }else{
+                        //new records
+                        $item = $miningRecord->items()->create([
+                            'worker_id'=>$record['workerId'],
+                            'volume'=>$record['volume'],
+                            'number_of_loads'=>$record['numberOfLoads'],
+                            'updated_at'=>now(),
+                        ]);
+                    }
+
+                    $existingIds[] = $item->id;
+
+                }
+
+                // delete removed records
+                $miningRecord->items()->whereNotIn('id',$existingIds)->delete();
+
+                //Remove previous records in sand movement table
+                SandMovement::where('reference_type',MiningRecord::class)->where('reference_id',$miningRecord->id)->delete();
+
+                //Recreate updated sand movement
+                $movements = collect($validatedData['records'])->map(fn ($item)=>[
+                    'type'=>SandMovement::TYPE_IN,
+                    'loads'=>$item['numberOfLoads'],
+                    'volume'=>$item['volume'],
+                    'reference_type'=>MiningRecord::class,
+                    'reference_id'=>$miningRecord->id,
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
+                ])->toArray();
+
+                SandMovement::insert($movements);
+
+            });
+
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Failed to update record',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'message'=>'Mining Record Updated Successfully'
+        ]);
     }
 
     /**

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PageComponent from '../../Components/PageComponent'
 import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,20 +6,21 @@ import MiningEditor from '../../Components/MiningEditor'
 import axiosClient from '../../../axios';
 import { useStateContext } from '../../context/ContextProvider';
 import BackButton from '../../Components/BackButton';
+import { useParams } from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-export default function DailyMiningCreate() {
+export default function DailyMiningForm() {
 
     const [date,setDate] = useState('');
     const [errors,setErrors] = useState({});
+    const [loading,setLoading] = useState(false);
     const {showToast} = useStateContext();
-    const [miningRecords,setMiningRecords] = useState([
-        {
-            id: uuidv4(),
-            workerId: '',
-            volume: '',
-            numberOfLoads: ''
-        }
-    ]);
+    const {id} = useParams();
+    const isEdit = Boolean(id);
+    const [miningRecords,setMiningRecords] = useState([]);
+    const [initialized, setInitialized] = useState(false);
+
+    console.log(miningRecords);
 
 
     const addMiningRecord = (ev) => {
@@ -59,11 +60,26 @@ export default function DailyMiningCreate() {
     const handleSubmit = async (e)=>{
         e.preventDefault();
 
+        const payload = {
+            date,
+            records:miningRecords.map(m=>({
+                id:m.id,
+                workerId:m.workerId,
+                volume:m.volume,
+                numberOfLoads:m.numberOfLoads
+            }))
+        }
+
         try{
-            const response = await axiosClient.post('/mining-records',{
-                date,
-                records:miningRecords
-            });
+
+            let response;
+
+            if(isEdit){
+                 response = await axiosClient.put(`/mining-records/${id}`,payload)
+            } else {
+                 response = await axiosClient.post('/mining-records',payload);
+            }
+
             showToast(response.data.message);
             setDate('');
             setMiningRecords([{
@@ -88,11 +104,57 @@ export default function DailyMiningCreate() {
         })
     }
 
+    useEffect(()=>{
+
+        const initializeForm = async ()=>{
+
+            if(isEdit){
+                setLoading(true);
+                try{
+                    const response = await axiosClient.get(`/mining-records/${id}`); 
+                    setDate(response.data.data.date);
+
+                    const mappedRecord = response.data.data.records.map(record=>({
+                        id: record.id,
+                        workerId: record.workerId,
+                        volume: record.volume,
+                        numberOfLoads: record.numberOfLoads
+                    }))
+                    setMiningRecords(mappedRecord)
+                    
+                }catch(error){
+                    console.error("Failed to fetch record:", error);
+                }finally{
+                    setLoading(false)
+                    setInitialized(true);
+                }
+
+            }else{
+
+                setMiningRecords([
+                        {
+                            id: uuidv4(),
+                            workerId: '',
+                            volume: '',
+                            numberOfLoads: ''
+                        }
+                    ]);
+                setInitialized(true);
+            }
+        
+        }
+
+        initializeForm();
+    },[id]);
 
     return (
-        <PageComponent title="Daily Mining Entry" actions={
+        <PageComponent title={isEdit ? "Edit Daily Mining Entry": "Daily Mining Entry"} actions={
                 <BackButton fallback="/mining/daily" />
               }>
+{/* 
+            {loading && <div className='flex justify-center items-center h-64'>
+                <ClipLoader size={40} /> 
+            </div>} */}
             <div className="max-w-3xl mx-auto mt-10 rounded-xl bg-white shadow-md p-6 sm:p-8">
                 {/* Wrap the entire form with motion.div and layout for smooth layout animation */}
                 <motion.form layout className="space-y-4" onSubmit={handleSubmit}>
@@ -141,7 +203,6 @@ export default function DailyMiningCreate() {
                         </div>
                     )}
 
-
                     {/* Mining Records List */}
                     <AnimatePresence>
                         {miningRecords.map((m,index) => (
@@ -165,6 +226,7 @@ export default function DailyMiningCreate() {
                             </motion.div>
                         ))}
                     </AnimatePresence>
+                   
 
                     {/* Save Button */}
                     <motion.button
@@ -177,6 +239,8 @@ export default function DailyMiningCreate() {
 
                 </motion.form>
             </div>
+            
+            
         </PageComponent>
     )
 }
