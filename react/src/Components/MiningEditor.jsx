@@ -76,7 +76,7 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                     placeholder="Enter capacity"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:outline-none"
                     onChange={(ev)=>{
-                        setModel({...model,volume:Number(ev.target.value)})
+                        setModel({...model,volume:ev.target.value})
                         clearFieldError(index,'volume');
                     }}
                     onBlur={commitChange}
