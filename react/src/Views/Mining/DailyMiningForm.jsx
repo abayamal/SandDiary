@@ -6,7 +6,7 @@ import MiningEditor from '../../Components/MiningEditor'
 import axiosClient from '../../../axios';
 import { useStateContext } from '../../context/ContextProvider';
 import BackButton from '../../Components/BackButton';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function DailyMiningForm() {
@@ -20,7 +20,14 @@ export default function DailyMiningForm() {
     const [miningRecords,setMiningRecords] = useState([]);
     const [initialized, setInitialized] = useState(false);
 
-    console.log(miningRecords);
+    //check the view request
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const viewMode = queryParams.get('mode') === 'view';
+
+    const mode = id ? (viewMode ? 'view' : 'edit') : 'create';
+
+    const isView = mode === 'view';
 
 
     const addMiningRecord = (ev) => {
@@ -183,8 +190,9 @@ export default function DailyMiningForm() {
 
                         <div className='w-[70px]'>
                             <button
-                                className="h-[42px] rounded-md bg-indigo-600 px-4 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="h-[42px] rounded-md bg-indigo-600 px-4 text-sm font-semibold text-white shadowhover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600"
                                 onClick={addMiningRecord}
+                                disabled={isView}
                             >
                                 ADD
                             </button>
@@ -221,6 +229,7 @@ export default function DailyMiningForm() {
                                     errors={errors}
                                     index={index}
                                     clearFieldError={clearFieldError}
+                                    isView={isView}
 
                                 />
                             </motion.div>
@@ -232,7 +241,8 @@ export default function DailyMiningForm() {
                     <motion.button
                         type="submit"
                         layout       // animate position changes
-                        className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500 transition-colors"
+                        className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold hover:bg-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isView}
                     >
                         Save
                     </motion.button>

@@ -76,10 +76,10 @@ export default function DailyMiningList() {
                     <td className="px-4 py-2">{record.volume}</td>
                     <td className='px-4 py-2 space-x-3'>
                       <div className='flex gap-2 justify-center'>
-                        <Link to={`/mining/daily/${record.id}/edit`}>
+                        <Link to={`/mining/daily/${record.id}/edit?mode=edit`}>
                             <PencilSquareIcon className='w-6 cursor-pointer' title='Edit'/>
                         </Link>
-                        <Link to="">
+                        <Link to={`/mining/daily/${record.id}/view?mode=view`}>
                             <EyeIcon className='w-6 cursor-pointer' title='View'/>
                         </Link>
                         <TrashIcon className='w-6 cursor-pointer' title='Delete'/>

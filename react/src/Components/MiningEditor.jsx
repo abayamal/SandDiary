@@ -2,7 +2,7 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 import React, { useEffect, useState } from 'react'
 import axiosClient from '../../axios';
 
-export default function MiningEditor({miningRecord,deleteMiningRecord,changeMiningRecord,errors,index,clearFieldError}) {
+export default function MiningEditor({miningRecord,deleteMiningRecord,changeMiningRecord,errors,index,clearFieldError,isView}) {
 
     const [model,setModel] = useState({...miningRecord});
     const [loading,setLoading] = useState(false);
@@ -115,7 +115,10 @@ export default function MiningEditor({miningRecord,deleteMiningRecord,changeMini
                 </div>
             </div>
             <div className='flex items-end pb-2 flex-shrink-0'>
-                <TrashIcon className='w-6 h-6 text-red-600 cursor-pointer' onClick={()=>deleteMiningRecord(model.id,index)}/>
+                <TrashIcon className={`w-6 h-6 text-red-600 
+                        ${isView ? 'opacity-50 cursor-not-allowed'
+                                 :'cursor-pointer hover:text-red-700'
+                    }`} onClick={ !isView ? ()=>deleteMiningRecord(model.id,index): null}/>
             </div>
         </div>
     </>
