@@ -60,6 +60,10 @@ const router = createBrowserRouter([
                 element:<DailyMiningForm/>
             },
             {
+                path:"/mining/daily/:id/view",
+                element:<DailyMiningForm/>
+            },
+            {
                 path:"/mining/daily",
                 element:<DailyMiningList/>
             }
