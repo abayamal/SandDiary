@@ -6,6 +6,8 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { EyeIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import AddButton from '../../Components/AddButton';
 import PaginationLinks from '../../Components/PaginationLinks';
+import ConfirmModel from '../../Components/ConfirmModel';
+import { useStateContext } from '../../context/ContextProvider';
 
 export default function DailyMiningList() {
 
@@ -13,6 +15,9 @@ export default function DailyMiningList() {
     const [loading,setLoading] = useState(false);
     const [error,setError] = useState(null);
     const [meta,setMeta] = useState({})
+    const [open,setOpen] = useState(false);
+    const [selectedId,setSelectedId] = useState(null);
+    const {showToast} = useStateContext();
 
     const formatDate = (dateString) => {
       return new Intl.DateTimeFormat('en-GB', {
@@ -50,6 +55,24 @@ export default function DailyMiningList() {
         fetchDailyRecords();
     },[])
 
+    const confirmDelete  = (id)=>{
+        setSelectedId(id)
+        setOpen(true);
+    }
+
+    const deleteRecord = async ()=>{
+      if(!selectedId) return;
+      try{
+        await axiosClient.delete(`mining-records/${selectedId}`);
+        setOpen(false);
+        setSelectedId(null);
+        showToast('Mining Record Deleted successfully!');
+        fetchDailyRecords();
+      }catch(error){
+        console.log(error);
+      }
+    } 
+
   return (
     <PageComponent title="Daily Mining Records"  actions={
         <AddButton label="Add Record" to="/mining/daily/create" />
@@ -82,7 +105,7 @@ export default function DailyMiningList() {
                         <Link to={`/mining/daily/${record.id}/view?mode=view`}>
                             <EyeIcon className='w-6 cursor-pointer' title='View'/>
                         </Link>
-                        <TrashIcon className='w-6 cursor-pointer' title='Delete'/>
+                        <TrashIcon className='w-6 cursor-pointer' title='Delete' onClick={()=>confirmDelete(record.id)}/>
                       </div>
                     </td>
                   </tr>
@@ -95,6 +118,8 @@ export default function DailyMiningList() {
       
       }
         {dailyRecords.length > 0 ? <PaginationLinks meta={meta} changeUrl={changeUrl}/> : null}
+
+        <ConfirmModel open={open} setOpen={setOpen} title={'Confirm Delete'} description={'Are you sure want to delete this record?'} label={'Delete'} action={deleteRecord}/>
     </PageComponent>
   )
 }
