@@ -155,7 +155,7 @@ export default function DailyMiningForm() {
     },[id]);
 
     return (
-        <PageComponent title={isEdit ? "Edit Daily Mining Entry": "Daily Mining Entry"} actions={
+        <PageComponent title={isView ? "Read Daily Mining Entry" : isEdit ? "Edit Daily Mining Entry": "Daily Mining Entry"} actions={
                 <BackButton fallback="/mining/daily" />
               }>
 {/* 

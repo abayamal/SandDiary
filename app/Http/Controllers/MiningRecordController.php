@@ -178,8 +178,27 @@ class MiningRecordController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(MiningRecord $miningRecord)
     {
-        //
+        try{
+            DB::transaction(function () use ($miningRecord){
+
+                //Delete related sand movement
+                SandMovement::where('reference_type',MiningRecord::class)->where('reference_id',$miningRecord->id)->delete();
+
+                //Delete Mining Record
+                $miningRecord->delete();
+
+            });
+
+            return response()->json([
+                'message'=>'Mining Record Deleted successfully!'
+            ],200);
+        }catch(\Exception $e){
+            return response()->json([
+                'message'=>'Faild to delete record',
+                'error'=>$e->getMessage()
+            ],500);
+        }
     }
 }
