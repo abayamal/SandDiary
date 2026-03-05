@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MiningRecordController;
+use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\WorkerController;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
@@ -23,6 +24,9 @@ Route::middleware('auth:sanctum')->group(function (){
 
     // Mining Records
     Route::apiResource('/mining-records',MiningRecordController::class);
+
+    //Vehicles
+    Route::apiResource('/vehicle',VehicleController::class);
 });
 
 Route::post('/signup',[AuthController::class,'signup']); 

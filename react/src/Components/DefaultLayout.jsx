@@ -16,6 +16,7 @@ const navigation = [
   { name: 'Dashboard', href: '/', current: true },
   { name: 'Workers', href: '/workers', current: true },
   { name: 'Mining', href: '/mining', current: true },
+  { name: 'Vehicles', href: '/vehicles', current: true },
 ]
 const userNavigation = [
 

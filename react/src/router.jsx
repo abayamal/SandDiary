@@ -13,6 +13,8 @@ import WorkerRead from "./Views/WorkerRead";
 import Mining from "./Views/Mining/Mining";
 import DailyMiningList from "./Views/Mining/DailyMiningList";
 import DailyMiningForm from "./Views/Mining/DailyMiningForm";
+import Vehicles from "./Views/Vehicles/Vehicles";
+import VehicleAdd from "./Views/Vehicles/VehicleAdd";
 
 const router = createBrowserRouter([
     {
@@ -66,6 +68,14 @@ const router = createBrowserRouter([
             {
                 path:"/mining/daily",
                 element:<DailyMiningList/>
+            },
+            {
+                path:"/vehicles",
+                element:<Vehicles/>
+            },
+            {
+                path:"/vehicles/add",
+                element:<VehicleAdd/>
             }
           
         ]
