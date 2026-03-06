@@ -4,8 +4,6 @@ import { useState } from 'react'
 
 export default function PaginationLinks({meta,changeUrl}) {
 
-    console.log(meta);
-
     const clickPagination = (url)=>{
         changeUrl(url);
     }
