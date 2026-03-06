@@ -14,7 +14,7 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        //
+        return VehicleResource::collection(Vehicle::orderBy('created_at','desc')->paginate(5));
     }
 
     /**

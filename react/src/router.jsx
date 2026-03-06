@@ -15,6 +15,7 @@ import DailyMiningList from "./Views/Mining/DailyMiningList";
 import DailyMiningForm from "./Views/Mining/DailyMiningForm";
 import Vehicles from "./Views/Vehicles/Vehicles";
 import VehicleAdd from "./Views/Vehicles/VehicleAdd";
+import VehicleList from "./Views/Vehicles/VehicleList";
 
 const router = createBrowserRouter([
     {
@@ -50,10 +51,6 @@ const router = createBrowserRouter([
                 element:<Mining/>
             },
             {
-                path:"/mining",
-                element:<Mining/>
-            },
-            {
                 path:"/mining/daily/create",
                 element:<DailyMiningForm/>
             },
@@ -76,6 +73,10 @@ const router = createBrowserRouter([
             {
                 path:"/vehicles/add",
                 element:<VehicleAdd/>
+            },
+            {
+                path:"/vehicles/list",
+                element:<VehicleList/>
             }
           
         ]

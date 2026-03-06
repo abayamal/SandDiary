@@ -3,6 +3,7 @@ import PageComponent from '../../Components/PageComponent'
 import VehicleForm from '../../Components/VehicleForm'
 import axiosClient from '../../../axios';
 import { useStateContext } from '../../context/ContextProvider';
+import BackButton from '../../Components/BackButton';
 
 export default function VehicleAdd() {
 
@@ -46,7 +47,9 @@ export default function VehicleAdd() {
     }
 
   return (
-    <PageComponent title="Add Vehicles">
+    <PageComponent title="Add Vehicles" actions={
+      <BackButton fallback="/vehicles/list" />
+    }>
          <VehicleForm values={values} setValues={setValues} onsubmit={onsubmit} errors={errors} clearFields={clearFields}/>
     </PageComponent>
   )
